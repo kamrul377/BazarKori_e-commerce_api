@@ -1,14 +1,28 @@
 const productModel = require("../models/productModel")
 
+
+
 exports.getAllProducts = async (req, res) => {
     try {
-        const products = await productModel.find({}).select('-description')
-        if (!products) {
-            res.status(404).json({
-                message: "Products not found"
-            })
+        const limit = Number(req.query._limit)
+        if (!limit) {
+            const products = await productModel.find({}).select('-description')
+            if (!products) {
+                res.status(404).json({
+                    message: "Products not found"
+                })
+            }
+            res.status(200).send(products)
+        } else {
+            const limitedProducts = await productModel.find({}).select('-description').limit(limit)
+            if (!limitedProducts) {
+                res.status(404).json({
+                    message: "Products not found"
+                })
+            }
+            res.status(200).send(limitedProducts)
         }
-        res.status(200).send(products)
+
     } catch (error) {
         res.status(402).json({
             success: false,
@@ -42,9 +56,13 @@ exports.getSingleProduct = async (req, res) => {
 
 exports.createProducts = async (req, res) => {
     try {
-        const data = req.body;
+        const { name, price, description, rating, color } = req.body;
+        const file = req.file.filename;
 
-        const products = await productModel.create(data)
+
+        const products = await productModel.create({
+            name, price, color, rating, description, image: file
+        })
 
         res.status(201).json(products)
 

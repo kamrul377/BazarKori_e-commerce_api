@@ -5,7 +5,7 @@ const { upload } = require("../utilities/multer")
 
 const productsRouter = express.Router()
 
-productsRouter.get('/', (req, res) => res.send("Welcome To Our Bazar."))
+
 productsRouter.get('/products', getAllProducts)
 productsRouter.get('/products/:name', getSingleProduct)
 
