@@ -16,6 +16,10 @@ const productSchema = mongoose.Schema({
         type: String,
         require: [true, "color must be required"],
     },
+    category: {
+        type: String,
+        require: [true, "category mush ber required"]
+    },
     rating: {
         type: Number,
         require: [true, "rating must be required"],

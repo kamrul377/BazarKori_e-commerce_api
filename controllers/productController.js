@@ -1,4 +1,6 @@
+const path = require("path")
 const productModel = require("../models/productModel")
+const fs = require("fs")
 
 
 
@@ -56,13 +58,24 @@ exports.getSingleProduct = async (req, res) => {
 
 exports.createProducts = async (req, res) => {
     try {
-        const { name, price, description, rating, color } = req.body;
+        const { name, price, description, rating, color, category } = req.body;
         const file = req.file.filename;
+        const file1 = path.join("http://localhost:3004/" + file)
+        const filePath = file1.replace(/\\/g, '//')
 
+        // const exists = await productModel.findOne({ name })
+        // if (exists) {
+        //     res.status(403).json({
+        //         message: "name already exists here."
+        //     })
+        //     fs.unlink(file1)
+        //     return
+        // }
 
         const products = await productModel.create({
-            name, price, color, rating, description, image: file
+            name, price, color, rating, description,category, image: filePath
         })
+
 
         res.status(201).json(products)
 

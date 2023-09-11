@@ -1,6 +1,13 @@
 const userModel = require("../models/userModel")
 const bcrypt = require('bcrypt')
+const session = require("express-session")
+const path = require("path")
+const passport = require("passport")
 
+exports.allUsers = async (req, res) => {
+    const users = await userModel.find({})
+    res.send(users)
+}
 exports.registerUser = async (req, res) => {
 
     try {
@@ -11,10 +18,10 @@ exports.registerUser = async (req, res) => {
             return res.status(400).send("user already exists..")
         }
 
-        const hashPass = bcrypt.hashSync(req.body.password, 10);
+        // const hashPass = bcrypt.hashSync(req.body.password, 10);
         const newUser = await userModel.create({
             username: req.body.username,
-            password: hashPass
+            password: req.body.password
         })
         res.status(201).json({
             message: "user created",
@@ -27,21 +34,33 @@ exports.registerUser = async (req, res) => {
 }
 exports.loginUser = (req, res) => {
     try {
-        res.send("login")
+        const filePath = path.join(__dirname, '../views', 'profile.html');
+        res.sendFile(filePath);
     } catch (error) {
         res.status(500).send(error.message)
     }
 }
+
 exports.profileUser = (req, res) => {
     try {
-        res.send("profileUser")
+        const filePath = path.join(__dirname, '../views', 'profile.html');
+        res.sendFile(filePath);
+
     } catch (error) {
         res.status(500).send(error.message)
     }
 }
+
 exports.logoutUser = (req, res) => {
     try {
-        res.redirect('/user')
+        req.logout((err) => {
+            if (err) {
+                return next(err)
+            }
+            res.redirect("/user")
+        })
+
+
     } catch (error) {
         res.status(500).send(error.message)
     }
