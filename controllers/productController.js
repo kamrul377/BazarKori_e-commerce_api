@@ -1,6 +1,18 @@
 const path = require("path")
 const productModel = require("../models/productModel")
 const fs = require("fs")
+const cloudinary = require("cloudinary").v2
+const Joi = require("joi")
+
+
+// cloudinary-------------------*******--------------
+cloudinary.config({
+    cloud_name: 'dxjldirwv',
+    api_key: '247962375688242',
+    api_secret: 'YJeoak6m7Kq4KzvYZn1s4locPWc',
+});
+
+// joi validator-------------------*******--------------
 
 
 
@@ -59,25 +71,17 @@ exports.getSingleProduct = async (req, res) => {
 exports.createProducts = async (req, res) => {
     try {
         const { name, price, description, rating, color, category } = req.body;
-        const file = req.file.filename;
-        const file1 = path.join("http://localhost:3004/" + file)
-        const filePath = file1.replace(/\\/g, '//')
 
-        // const exists = await productModel.findOne({ name })
-        // if (exists) {
-        //     res.status(403).json({
-        //         message: "name already exists here."
-        //     })
-        //     fs.unlink(file1)
-        //     return
-        // }
+        const image = await cloudinary.uploader.upload(req.file.path)
 
         const products = await productModel.create({
-            name, price, color, rating, description,category, image: filePath
+            name, price, color, rating, description, category, image: image.secure_url
         })
 
+        res.status(201).json({
+            message: "products added successfully"
+        })
 
-        res.status(201).json(products)
 
     } catch (error) {
         res.status(402).json({

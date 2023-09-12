@@ -23,7 +23,7 @@ const isLoggedIn = (req, res, next) => {
     }
 }
 
-userRouter.get('/user', allUsers)
+// userRouter.get('/user', allUsers)
 userRouter.post('/user/register', registerUser)
 
 userRouter.post('/user/login',
