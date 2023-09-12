@@ -49,15 +49,17 @@ exports.getSingleProduct = async (req, res) => {
         const { name } = req.params
         const productName = name.trim()
 
-        const singleProduct = await productModel.findOne({
+        const singleProduct = await productModel.find({
             name: productName
         })
-        if (!singleProduct) {
-            res.json({
+
+        if (singleProduct.length === 0) {
+            console.log('exicute')
+            return res.json({
                 message: "Products not found"
             })
-            return
         }
+        console.log('comes herer')
         res.json(singleProduct)
 
     } catch (error) {
